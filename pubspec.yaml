@@ -1,0 +1,16 @@
+name: pretty_bytes
+description: Convert bytes to a human readable string.
+version: 6.0.0
+homepage: https://www.example.com
+
+environment:
+  sdk: ">=2.18.2 <3.0.0"
+
+# dependencies:
+#   path: ^1.8.0
+
+dev_dependencies:
+  mgenware_dart_lints: ^2.1.0
+  test: ^1.16.0
+dependencies:
+  intl: ^0.17.0
