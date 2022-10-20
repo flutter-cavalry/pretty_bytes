@@ -1,5 +1,6 @@
 # pretty_bytes
 
+[![pub package](https://img.shields.io/pub/v/pretty_bytes.svg)](https://pub.dev/packages/pretty_bytes)
 [![Build Status](https://github.com/flutter-cavalry/pretty_bytes/workflows/Build/badge.svg)](https://github.com/flutter-cavalry/pretty_bytes/actions)
 
 Dart port of [pretty-bytes](https://github.com/sindresorhus/pretty-bytes).
