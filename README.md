@@ -1,6 +1,6 @@
 # pretty_bytes
 
-[![Build Status](https://github.com/mgenware/pretty_bytes/workflows/Build/badge.svg)](https://github.com/mgenware/pretty_bytes/actions)
+[![Build Status](https://github.com/flutter-cavalry/pretty_bytes/workflows/Build/badge.svg)](https://github.com/flutter-cavalry/pretty_bytes/actions)
 
 Dart port of [pretty-bytes](https://github.com/sindresorhus/pretty-bytes).
 
