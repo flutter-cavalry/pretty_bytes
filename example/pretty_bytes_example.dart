@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:pretty_bytes/pretty_bytes.dart';
 
 void main() {
