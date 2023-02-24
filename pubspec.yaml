@@ -1,10 +1,10 @@
 name: pretty_bytes
 description: Convert bytes to a human readable string.
-version: 6.0.1
+version: 6.1.0
 homepage: https://github.com/flutter-cavalry/pretty_bytes
 
 environment:
-  sdk: ">=2.18.2 <3.0.0"
+  sdk: ">=2.18.0 <3.0.0"
 
 # dependencies:
 #   path: ^1.8.0
@@ -13,4 +13,4 @@ dev_dependencies:
   mgenware_dart_lints: ^2.1.0
   test: ^1.16.0
 dependencies:
-  intl: ^0.17.0
+  intl: ^0.18.0
