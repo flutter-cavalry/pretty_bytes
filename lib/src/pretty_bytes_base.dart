@@ -61,7 +61,7 @@ String toLocaleString(double number, String? locale, int? minimumFractionDigits,
   if (locale == null) {
     return number.toString().replaceAll(removeTrailingZerosRegex, '');
   }
-  var formatter = NumberFormat(null, locale);
+  final formatter = NumberFormat(null, locale);
   if (maximumFractionDigits != null) {
     formatter.minimumFractionDigits = minimumFractionDigits!;
   }
@@ -126,7 +126,7 @@ String prettyBytes(
   /// ```
   int? maximumFractionDigits,
 }) {
-  var UNITS = (bits == true)
+  final UNITS = (bits == true)
       ? (binary == true ? BIBIT_UNITS : BIT_UNITS)
       : (binary == true ? BIBYTE_UNITS : BYTE_UNITS);
 
@@ -134,20 +134,20 @@ String prettyBytes(
     return ' 0 ${UNITS[0]}';
   }
 
-  var isNegative = number < 0;
-  var prefix = isNegative ? '-' : (signed == true ? '+' : '');
+  final isNegative = number < 0;
+  final prefix = isNegative ? '-' : (signed == true ? '+' : '');
 
   if (isNegative) {
     number = -number;
   }
 
   if (number < 1) {
-    var numberStr = toLocaleString(
+    final numberStr = toLocaleString(
         number, locale, minimumFractionDigits, maximumFractionDigits);
     return prefix + numberStr + ' ' + UNITS[0];
   }
 
-  var exponent = min(
+  final exponent = min(
           (binary != null ? log(number) / log(1024) : log10(number) / 3)
               .floorToDouble(),
           (UNITS.length - 1).toDouble())
@@ -157,10 +157,10 @@ String prettyBytes(
     number = double.parse(number.toStringAsPrecision(3));
   }
 
-  var numberStr = toLocaleString(
+  final numberStr = toLocaleString(
       number, locale, minimumFractionDigits, maximumFractionDigits);
 
-  var unit = UNITS[exponent];
+  final unit = UNITS[exponent];
 
   return prefix + numberStr + ' ' + unit;
 }
