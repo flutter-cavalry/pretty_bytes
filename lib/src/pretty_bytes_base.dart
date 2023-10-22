@@ -73,7 +73,6 @@ String toLocaleString(double number, String? locale, int? minimumFractionDigits,
 
 String prettyBytes(
   double number, {
-
   /// Include plus sign for positive numbers. If the difference is exactly zero a space character will be prepended instead for better alignment.
   /// Default: false.
   bool? signed,
