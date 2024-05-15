@@ -10,7 +10,7 @@ environment:
 #   path: ^1.8.0
 
 dev_dependencies:
-  mgenware_dart_lints: ^4.1.0
+  mgenware_dart_lints: ^5.0.0
   test: ^1.16.0
 dependencies:
-  intl: ^0.18.0
+  intl: ^0.19.0
