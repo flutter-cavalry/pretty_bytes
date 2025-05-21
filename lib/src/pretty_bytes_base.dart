@@ -52,14 +52,14 @@ const BIBIT_UNITS = [
   'Yibit',
 ];
 
-double log10(num x) => log(x) / ln10;
+double _log10(num x) => log(x) / ln10;
 
-var removeTrailingZerosRegex = RegExp(r'([.]*0)(?!.*\d)');
+var _removeTrailingZerosRegex = RegExp(r'([.]*0)(?!.*\d)');
 
-String toLocaleString(double number, String? locale, int? minimumFractionDigits,
-    int? maximumFractionDigits) {
+String _toLocaleString(double number, String? locale,
+    int? minimumFractionDigits, int? maximumFractionDigits) {
   if (locale == null) {
-    return number.toString().replaceAll(removeTrailingZerosRegex, '');
+    return number.toString().replaceAll(_removeTrailingZerosRegex, '');
   }
   final formatter = NumberFormat(null, locale);
   if (maximumFractionDigits != null) {
@@ -142,13 +142,13 @@ String prettyBytes(
   }
 
   if (number < 1) {
-    final numberStr = toLocaleString(
+    final numberStr = _toLocaleString(
         number, locale, minimumFractionDigits, maximumFractionDigits);
     return prefix + numberStr + ' ' + UNITS[0];
   }
 
   final exponent = min(
-          (binary != null ? log(number) / log(1024) : log10(number) / 3)
+          (binary != null ? log(number) / log(1024) : _log10(number) / 3)
               .floorToDouble(),
           (UNITS.length - 1).toDouble())
       .toInt();
@@ -157,7 +157,7 @@ String prettyBytes(
     number = double.parse(number.toStringAsPrecision(3));
   }
 
-  final numberStr = toLocaleString(
+  final numberStr = _toLocaleString(
       number, locale, minimumFractionDigits, maximumFractionDigits);
 
   final unit = UNITS[exponent];
