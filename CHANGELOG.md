@@ -1,3 +1,7 @@
+## 6.3.0
+
+- Upgrade deps
+
 ## 6.2.0
 
 - Upgrade deps
