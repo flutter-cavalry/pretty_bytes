@@ -84,7 +84,8 @@ void main() {
   });
 
   test('fraction digits options', () {
-    expect(prettyBytes(1900, minimumFractionDigits: 3, locale: 'en'), '1.900 KB');
+    expect(
+        prettyBytes(1900, minimumFractionDigits: 3, locale: 'en'), '1.900 KB');
     expect(prettyBytes(1920, maximumFractionDigits: 1, locale: 'en'), '1.9 KB');
     expect(prettyBytes(1900, minimumFractionDigits: 3), '1.900 KB');
   });

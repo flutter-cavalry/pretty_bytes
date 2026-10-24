@@ -149,7 +149,8 @@ String prettyBytes(
 
   if (minimumFractionDigits == null && maximumFractionDigits == null) {
     final minimumPrecision = max(3, numberValue.floor().toString().length);
-    numberValue = double.parse(numberValue.toStringAsPrecision(minimumPrecision));
+    numberValue =
+        double.parse(numberValue.toStringAsPrecision(minimumPrecision));
     if (numberValue >= base && exponent < UNITS.length - 1) {
       numberValue /= base;
       exponent += 1;
@@ -163,6 +164,3 @@ String prettyBytes(
 
   return prefix + numberStr + ' ' + unit;
 }
-
-
-
