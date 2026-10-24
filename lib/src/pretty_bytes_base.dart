@@ -58,72 +58,58 @@ var _removeTrailingZerosRegex = RegExp(r'([.]*0)(?!.*\d)');
 
 String _toLocaleString(double number, String? locale,
     int? minimumFractionDigits, int? maximumFractionDigits) {
-  if (locale == null) {
+  if (locale == null &&
+      minimumFractionDigits == null &&
+      maximumFractionDigits == null) {
     return number.toString().replaceAll(_removeTrailingZerosRegex, '');
   }
-  final formatter = NumberFormat(null, locale);
-  if (maximumFractionDigits != null) {
-    formatter.minimumFractionDigits = minimumFractionDigits!;
-  }
+  final effectiveLocale = locale ?? 'en_US';
+  final formatter = NumberFormat(null, effectiveLocale);
   if (minimumFractionDigits != null) {
-    formatter.maximumFractionDigits = maximumFractionDigits!;
+    formatter.minimumFractionDigits = minimumFractionDigits;
+  }
+  if (maximumFractionDigits != null) {
+    formatter.maximumFractionDigits = maximumFractionDigits;
+  }
+  if (locale == null) {
+    formatter.turnOffGrouping();
   }
   return formatter.format(number);
 }
 
+/// Converts [number] bytes to a human readable string.
+///
+/// ```dart
+/// prettyBytes(1024); // 1 KB
+/// prettyBytes(1000000); // 1 MB
+/// ```
+///
+/// [signed] Include plus sign for positive numbers. If the value is exactly
+/// zero a space character is prepended instead for better alignment.
+/// Default: `false`.
+///
+/// [locale] A [BCP 47 language tag](https://en.wikipedia.org/wiki/IETF_language_tag)
+/// (for example `en`, `de`). When `null` the output is not localized.
+/// Default: `null`.
+///
+/// [bits] Format the number as bits instead of bytes. Default: `false`.
+///
+/// [binary] Use binary (1024) prefixes instead of SI (1000) prefixes.
+/// Default: `false`.
+///
+/// [minimumFractionDigits] Minimum number of fraction digits to display.
+/// Default: `null`.
+///
+/// [maximumFractionDigits] Maximum number of fraction digits to display.
+/// Default: `null`.
+///
 String prettyBytes(
-  double number, {
-  /// Include plus sign for positive numbers. If the difference is exactly zero a space character will be prepended instead for better alignment.
-  /// Default: false.
+  int number, {
   bool? signed,
-
-  /// - If `null`: Output won't be localized.
-  /// - If `string`: Expects a [BCP 47 language tag](https://en.wikipedia.org/wiki/IETF_language_tag) (For example: `en`, `de`, …)
-  /// @default null
   String? locale,
-
-  /// Format the number as [bits](https://en.wikipedia.org/wiki/Bit) instead of [bytes](https://en.wikipedia.org/wiki/Byte). This can be useful when, for example, referring to [bit rate](https://en.wikipedia.org/wiki/Bit_rate).
-  /// Default: false.
-  /// @example
-  /// ```
-  /// prettyBytes(1337, bits: true);
-  /// //=> '1.34 kbit'
-  /// ```
   bool? bits,
-
-  /// Format the number using the [Binary Prefix](https://en.wikipedia.org/wiki/Binary_prefix) instead of the [SI Prefix](https://en.wikipedia.org/wiki/SI_prefix). This can be useful for presenting memory amounts. However, this should not be used for presenting file sizes.
-  /// Default: false.
-  /// @example
-  /// ```
-  /// prettyBytes(1000, binary: true);
-  /// //=> '1000 bit'
-  /// prettyBytes(1024, binary: true);
-  /// //=> '1 kiB'
-  /// ```
   bool? binary,
-
-  /// The minimum number of fraction digits to display.
-  /// If neither `minimumFractionDigits` or `maximumFractionDigits` are set, the default behavior is to round to 3 significant digits.
-  /// @default null
-  /// ```
-  /// // Show the number with at least 3 fractional digits
-  /// prettyBytes(1900, {minimumFractionDigits: 3});
-  /// //=> '1.900 kB'
-  /// prettyBytes(1900);
-  /// //=> '1.9 kB'
-  /// ```
   int? minimumFractionDigits,
-
-  /// The maximum number of fraction digits to display.
-  /// If neither `minimumFractionDigits` or `maximumFractionDigits` are set, the default behavior is to round to 3 significant digits.
-  /// @default null
-  /// ```
-  /// // Show the number with at most 1 fractional digit
-  /// prettyBytes(1920, {maximumFractionDigits: 1});
-  /// //=> '1.9 kB'
-  /// prettyBytes(1920);
-  /// //=> '1.92 kB'
-  /// ```
   int? maximumFractionDigits,
 }) {
   final UNITS = (bits == true)
@@ -137,30 +123,46 @@ String prettyBytes(
   final isNegative = number < 0;
   final prefix = isNegative ? '-' : (signed == true ? '+' : '');
 
-  if (isNegative) {
-    number = -number;
-  }
+  var numberValue = (number < 0 ? -number : number).toDouble();
 
-  if (number < 1) {
+  if (numberValue < 1) {
     final numberStr = _toLocaleString(
-        number, locale, minimumFractionDigits, maximumFractionDigits);
+        numberValue, locale, minimumFractionDigits, maximumFractionDigits);
     return prefix + numberStr + ' ' + UNITS[0];
   }
 
-  final exponent = min(
-          (binary != null ? log(number) / log(1024) : _log10(number) / 3)
+  final base = binary == true ? 1024 : 1000;
+  var exponent = min(
+          (binary == true
+                  ? log(numberValue) / log(base)
+                  : _log10(numberValue) / 3)
               .floorToDouble(),
           (UNITS.length - 1).toDouble())
       .toInt();
-  number /= pow(binary != null ? 1024 : 1000, exponent);
+
+  numberValue /= pow(base, exponent);
+
+  if (numberValue < 1 && exponent > 0) {
+    numberValue *= base;
+    exponent -= 1;
+  }
+
   if (minimumFractionDigits == null && maximumFractionDigits == null) {
-    number = double.parse(number.toStringAsPrecision(3));
+    final minimumPrecision = max(3, numberValue.floor().toString().length);
+    numberValue = double.parse(numberValue.toStringAsPrecision(minimumPrecision));
+    if (numberValue >= base && exponent < UNITS.length - 1) {
+      numberValue /= base;
+      exponent += 1;
+    }
   }
 
   final numberStr = _toLocaleString(
-      number, locale, minimumFractionDigits, maximumFractionDigits);
+      numberValue, locale, minimumFractionDigits, maximumFractionDigits);
 
   final unit = UNITS[exponent];
 
   return prefix + numberStr + ' ' + unit;
 }
+
+
+

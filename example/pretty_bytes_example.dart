@@ -15,6 +15,6 @@ void main() {
   print(prettyBytes(1025, binary: true));
   // 1 KiB
 
-  print(prettyBytes(0.4, locale: 'de'));
-  // 0,4 B
+  print(prettyBytes(1500, locale: 'de'));
+  // 1,5 KB
 }
